@@ -1,7 +1,7 @@
 from django.contrib.auth.models import User
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 
-from apps.todo.forms import CreateTaskForm
+from apps.todo.forms import CreateTaskForm, TaskUpdateForm
 from apps.todo.models import (
     Task,
     Category,
@@ -69,4 +69,59 @@ def create_new_task(request):
     )
 
 
+def update_task(request, task_id):
+    task = get_object_or_404(Task, id=task_id)
+    categories = Category.objects.all()
+    statuses = Status.objects.all()
+    priorities = Priority.objects.all()
 
+    if request.method == 'POST':
+        form = TaskUpdateForm(request.POST, instance=task)
+
+        if form.is_valid():
+            form.save()
+            return redirect('router:tasks:all-tasks')
+
+        context = {
+            "form": form,
+            "categories": categories,
+            "statuses": statuses,
+            "priorities": priorities
+        }
+
+    else:
+        form = TaskUpdateForm(instance=task)
+
+        context = {
+            "form": form,
+            "categories": categories,
+            "statuses": statuses,
+            "priorities": priorities
+        }
+
+    return render(
+        request=request,
+        template_name='todo/update_task.html',
+        context=context
+    )
+
+
+def get_task_info_by_task_id(request, task_id):
+    task = get_object_or_404(Task, id=task_id)
+
+    context = {
+        "task": task
+    }
+
+    return render(
+        request=request,
+        template_name='todo/task_info.html',
+        context=context
+    )
+
+
+def delete_task(request, task_id):
+    task = get_object_or_404(Task, id=task_id)
+
+    task.delete()
+    return redirect('router:tasks:all-tasks')

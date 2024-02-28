@@ -38,3 +38,11 @@ class CreateTaskForm(ModelForm):
     class Meta:
         model = Task
         fields = '__all__'
+
+
+class TaskUpdateForm(ModelForm):
+
+    class Meta:
+        model = Task
+        fields = ('title', 'description', 'category', 'status', 'priority', 'updated_at',)
+
