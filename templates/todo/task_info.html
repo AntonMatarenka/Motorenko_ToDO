@@ -7,17 +7,40 @@
 {% block content %}
     <div class="task-content">
         <div class="task-info">
-            <h2>title: {{ task.title }}</h2>
-            <h4>category: {{ task.category }}</h4>
-            <h4>status: <b>{{ task.status }}</b></h4>
-            <h4>priority: <b>{{ task.priority }}</b></h4>
-            <p><b>description: </b>{{ task.description }}</p>
-            <h4>creator: {{ task.creator }}</h4>
-            <h4>deadline: {{ task.deadline }}</h4>
+            <h2>Title: {{ task.title }}</h2>
+            <h4>Category: {{ task.category }}</h4>
+            <h4>Status: <b>{{ task.status }}</b></h4>
+            <h4>Priority: <b>{{ task.priority }}</b></h4>
+            <p><b>Description: </b>{{ task.description }}</p>
+            <h4>Created_by: {{ task.created_by }}</h4>
+            <h4>Deadline: {{ task.deadline }}</h4>
         </div>
         <div class="button-container">
             <button class="update-button"><a href="{% url 'router:tasks:update-task' task.id %}">Update</a></button>
             <button class="delete-button"><a href="{% url 'router:tasks:delete-task' task.id %}">Delete</a></button>
+            <button class="create-button"><a href="{% url 'router:tasks:create-subtask' %}?task_id={{ task.id }}">Create</a></button>
         </div>
+        {% if subtasks %}
+            <div class="task-subtasks">
+                {% for subtask in subtasks %}
+                    <div class="subtask-info">
+                        <h2>Title: <a href="{% url 'router:tasks:subtask-info' subtask.id %}" class="subtask-title">
+                            {{ subtask.title|slice:":35" }}{% if subtask.title|length > 10 %}...{% endif %}
+                        </a>
+                        </h2>
+                        <h3>Status: <b>{{ task.status }}</b></h3>
+                        <div class="button-container">
+                            <a href="{% url 'router:tasks:update-subtask' subtask.id %}" class="update-button">Update</a>
+                            <a href="{% url 'router:tasks:delete-subtask' subtask.id %}" class="delete-button">Delete</a>
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+        {% else %}
+            <div class="no-subtasks-block">
+                <h1>You don't have any subtasks for this task!</h1>
+                <a href="{% url 'router:tasks:create-subtask' %}?task_id={{ task.id }}" class="create-subtask">Create subtask</a>
+            </div>
+        {% endif %}
     </div>
 {% endblock %}

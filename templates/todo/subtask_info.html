@@ -1,0 +1,29 @@
+{% extends 'main.html' %}
+
+{% block title %}
+    Subtask Info
+{% endblock %}
+
+{% block content %}
+    <div class="subtask-container">
+        <div class="subtask-block">
+            <div class="subtask">
+                <h2><span class="subtask-description">Title: </span>{{ subtask.title }}</h2>
+                <h4><span class="subtask-description">Category: </span>{{ subtask.category }}</h4>
+                <h4><span class="subtask-description">Status: </span>{{ subtask.status }}</h4>
+                <h4><span class="subtask-description">Priority: </span>{{ subtask.priority }}</h4>
+                <p><span class="subtask-description">Description: </span></p>
+                <h4>
+                    <span class="subtask-description">Task: </span>
+                    {{ subtask.task.title|slice:":35" }}{% if subtask.task.title|length > 25 %}...{% endif %}
+                </h4>
+                <h4><span class="subtask-description">Deadline: </span>{{ subtask.deadline }}</h4>
+            </div>
+        </div>
+        <div class="button-container">
+            <a href="{% url 'router:tasks:update-subtask' subtask.id %}" class="update-button">Update</a>
+            <a href="{% url 'router:tasks:delete-subtask' subtask.id %}" class="delete-button">Delete</a>
+        </div>
+    </div>
+{% endblock %}
+
