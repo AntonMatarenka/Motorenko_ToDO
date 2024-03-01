@@ -1,0 +1,32 @@
+{% extends 'main.html' %}
+
+{% block title %}
+    All Subtask
+{% endblock %}
+
+{% block content %}
+    <div class="subtasks">
+        {% if subtasks %}
+            {% for subtask in subtasks %}
+                <a href="{% url 'router:tasks:subtask-info' subtask.id %}" class="subtask-link">
+                    <div class="subtask">
+                        <h2><span class="subtask-description">Title: </span>{{ subtask.title }}</h2>
+                        <h4><span class="subtask-description">Category: </span>{{ subtask.category }}</h4>
+                        <h4><span class="subtask-description">Status: </span>{{ subtask.status }}</h4>
+                        <h4><span class="subtask-description">Priority: </span>{{ subtask.priority }}</h4>
+                        <p><b><span class="subtask-description">Description: </span>{{ subtask.description }}</b></p>
+                        <h4>
+                            <span class="subtask-description">Task: </span>
+                            {{ subtask.task.title|slice:":10" }}{% if subtask.task.title|length > 15 %}...{% endif %}
+                        </h4>
+                        <h4><span class="subtask-description">Deadline: </span>{{ subtask.deadline }}</h4>
+                    </div>
+                </a>
+            {% endfor %}
+        {% else %}
+            <div class="no-subtasks-block">
+                <h1>Looks like you don't have any subtasks!</h1>
+            </div>
+        {% endif %}
+    </div>
+{% endblock %}

@@ -1,64 +1,69 @@
 {% extends 'main.html' %}
 
 {% block title %}
-    Update task
+    {{ task.title }} | update
+
 {% endblock %}
 
 {% block content %}
-	<div class="new-task-title">
-        Update Task
-    </div>
-    <div class="new-task-container">
-        <form method="post">
+    <div class="task-container-form">
+        <form method="post" autocomplete="on">
             {% csrf_token %}
 
-            <div class="mb-3">
-                <label for="title" class="form-label">Title</label>
-                <input type="text" class="form-control" id="title" name="title" maxlength="25" placeholder="Title">
+            <div class="task-mb-3">
+                <label for="title" class="task-form-label">Title</label>
+                <input type="text" class="task-form-control" id="title" name="title"
+                       maxlength="25" value="{{ task.title }}">
             </div>
 
-            <div class="mb-3">
-                <label for="description" class="form-label">Description</label>
-                <textarea class="form-control" id="description" name="description" maxlength="1500"
-                          placeholder="Description"></textarea>
+            <div class="task-mb-3">
+                <label for="description" class="task-form-label">Description</label>
+                <textarea class="task-form-control" id="description" name="description"
+                          maxlength="1500">{{ task.description }}</textarea>
             </div>
 
-            <div class="mb-3">
-                <label for="category" class="form-label">Category</label>
-                <select class="form-control" id="category" name="category">
-                    <option value="" selected="">---</option> <!-- For optional category -->
+            <div class="task-mb-3">
+                <label for="category" class="task-form-label">Category</label>
+                <select class="task-form-control" id="category" name="category">
+                    <option value="{{ task.category.id }}" selected="{{ task.category }}">{{ task.category }}</option>
                     {% for category in categories %}
                         <option value="{{ category.id }}">{{ category.name }}</option>
                     {% endfor %}
                 </select>
             </div>
 
-            <div class="mb-3">
-                <label for="status" class="form-label">Status</label>
-                <select class="form-control" id="status" name="status">
-                    <option value="" selected="">---</option>
+            <div class="task-mb-3">
+                <label for="status" class="task-form-label">Status</label>
+                <select class="task-form-control" id="status" name="status">
+                    <option value="{{ task.status.id }}" selected="{{ task.status }}">{{ task.status }}</option>
                     {% for status in statuses %}
                         <option value="{{ status.id }}">{{ status.name }}</option>
                     {% endfor %}
                 </select>
             </div>
 
-            <div class="mb-3">
-                <label for="priority" class="form-label">Priority</label>
-                <select class="form-control" id="priority" name="priority">
-                    <option value="" selected="">---</option>
+             <div class="task-mb-3">
+                <label for="priority" class="task-form-label">Priority</label>
+                <select class="task-form-control" id="priority" name="priority">
+                    <option value="{{ task.priority.id }}" selected="{{ task.priority }}">{{ task.priority }}</option>
                     {% for priority in priorities %}
                         <option value="{{ priority.id }}">{{ priority.name }}</option>
                     {% endfor %}
                 </select>
             </div>
 
-            <div class="mb-3">
-                <label for="updated_at" class="form-label">Updated At</label>
-                <input type="date" class="form-control" id="updated_at" name="updated_at">
+            <div class="task-mb-3">
+                <label for="deadline" class="task-form-label">Deadline</label>
+                <input type="date" class="task-form-control" id="deadline" name="deadline" value="{{ task.deadline }}">
             </div>
 
-            <button type="submit" class="btn btn-primary">Update</button>
+            <button type="submit" class="task-update-button">Update</button>
+            {{ form.title.errors }}
+            {{ form.description.errors }}
+            {{ form.category.errors }}
+            {{ form.status.errors }}
+            {{ form.priority.errors }}
+            {{ form.deadline.errors }}
         </form>
     </div>
 {% endblock %}
