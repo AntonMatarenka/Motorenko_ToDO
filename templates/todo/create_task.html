@@ -26,9 +26,7 @@
                 <label for="created_by" class="form-label">Creator</label>
                 <select class="form-control" id="created_by" name="created_by">
                     <option value="" selected="">---</option>
-                    {% for user in users %}
                         <option value="{{ user.id }}">{{ user.username }}</option>
-                    {% endfor %}
                 </select>
             </div>
 
