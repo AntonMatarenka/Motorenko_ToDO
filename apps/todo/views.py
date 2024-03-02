@@ -5,6 +5,8 @@ from django.shortcuts import (
     get_object_or_404
 )
 
+from django.contrib.auth.decorators import login_required
+
 from apps.todo.forms import (
     CreateTaskForm,
     TaskUpdateForm,
@@ -20,6 +22,7 @@ from apps.todo.models import (
 )
 
 
+
 def home_page(request):
     return render(
         request=request,
@@ -27,8 +30,11 @@ def home_page(request):
     )
 
 
+@login_required(login_url='router:user:login')
 def get_all_tasks(request):
-    tasks = Task.objects.all()
+    tasks = Task.objects.filter(
+        created_by=request.user
+    )
 
     context = {
         "tasks": tasks
@@ -41,8 +47,9 @@ def get_all_tasks(request):
     )
 
 
+@login_required(login_url='router:user:login')
 def create_new_task(request):
-    users = User.objects.all()
+    users = get_object_or_404(User, id=request.user.id)
     categories = Category.objects.all()
     statuses = Status.objects.all()
     priorities = Priority.objects.all()
@@ -57,7 +64,7 @@ def create_new_task(request):
         context = {
             "form": form,
             "users": users,
-            "categories":categories,
+            "categories": categories,
             "statuses": statuses,
             "priorities": priorities
         }
@@ -79,6 +86,7 @@ def create_new_task(request):
     )
 
 
+@login_required(login_url='router:user:login')
 def update_task(request, task_id):
     task = get_object_or_404(Task, id=task_id)
     categories = Category.objects.all()
@@ -121,6 +129,7 @@ def update_task(request, task_id):
     )
 
 
+@login_required(login_url='router:user:login')
 def get_task_info_by_task_id(request, task_id):
     task = get_object_or_404(Task, id=task_id)
     subtasks = SubTask.objects.filter(
@@ -139,6 +148,7 @@ def get_task_info_by_task_id(request, task_id):
     )
 
 
+@login_required(login_url='router:user:login')
 def delete_task(request, task_id):
     task = get_object_or_404(Task, id=task_id)
 
@@ -146,6 +156,7 @@ def delete_task(request, task_id):
     return redirect('router:tasks:all-tasks')
 
 
+@login_required(login_url='router:user:login')
 def get_subtasks_info(request):
     subtasks = SubTask.objects.filter(
         created_by=request.user
@@ -162,6 +173,7 @@ def get_subtasks_info(request):
     )
 
 
+@login_required(login_url='router:user:login')
 def get_subtask_info_by_id(request, subtask_id):
     subtask = get_object_or_404(SubTask, id=subtask_id)
 
@@ -175,6 +187,8 @@ def get_subtask_info_by_id(request, subtask_id):
         context=context
     )
 
+
+@login_required(login_url='router:user:login')
 def create_subtask(request):
     task_id = request.GET.get("task_id")
 
@@ -209,6 +223,8 @@ def create_subtask(request):
         context=context
     )
 
+
+@login_required(login_url='router:user:login')
 def update_subtask(request, subtask_id):
     subtask = get_object_or_404(SubTask, id=subtask_id)
     categories = Category.objects.all()
@@ -239,10 +255,10 @@ def update_subtask(request, subtask_id):
         context=context
     )
 
-def delete_subtask(request, subtask_id):
 
+@login_required(login_url='router:user:login')
+def delete_subtask(request, subtask_id):
     subtask = get_object_or_404(SubTask, id=subtask_id)
 
     subtask.delete()
     return redirect('router:tasks:all-tasks')
-
